@@ -2,6 +2,10 @@ package ricardo.messagingapp.domain.message;
 
 import lombok.Getter;
 import org.springframework.data.domain.AbstractAggregateRoot;
+import ricardo.messagingapp.domain.message.DomainEvents.MessageDelivered;
+import ricardo.messagingapp.domain.message.DomainEvents.MessageEdited;
+import ricardo.messagingapp.domain.message.DomainEvents.MessageRead;
+import ricardo.messagingapp.domain.message.DomainEvents.MessageSent;
 
 import java.time.LocalDateTime;
 
