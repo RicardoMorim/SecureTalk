@@ -1,0 +1,4 @@
+ricardo:
+  auth:
+    jwt:
+      secret: ${RICARDO_AUTH_JWT_SECRET}
