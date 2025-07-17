@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>Ricardo</groupId>
-    <artifactId>MessagingApp</artifactId>
+    <artifactId>SecureTalk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>MessagingApp</name>
-    <description>MessagingApp</description>
+    <name>SecureTalk</name>
+    <description>SecureTalk</description>
 
     <url/>
     <licenses>

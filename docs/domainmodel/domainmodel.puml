@@ -1,0 +1,121 @@
+@startuml SecureTalk_Domain_Model
+!define ENTITY class
+!define VO class
+!define ENUM enum
+
+package "SecureTalk Domain" {
+
+    ENTITY Message <<Aggregate Root>> {
+        messageId: Long
+        conversationId: ConversationId
+        senderId: UserId
+        receiverId: UserId
+        content: MessageContent
+        sentAt: LocalDateTime
+        status: MessageStatus
+        isEdited: Boolean
+        lastEditedTime: LastEditedTime
+    }
+
+    VO UserId <<Value Object>> {
+        value: Long
+    }
+
+    VO MessageContent <<Value Object>> {
+        content: String
+    }
+
+    VO ConversationId <<Value Object>> {
+        id: String
+    }
+
+    VO LastEditedTime <<Value Object>> {
+        timestamp: LocalDateTime
+    }
+
+    ENUM MessageStatus <<Enumeration>> {
+        SENT
+        DELIVERED
+        READ
+    }
+
+    class MessageSent <<Domain Event>> {
+        messageId: Long
+        conversationId: ConversationId
+        senderId: UserId
+        receiverId: UserId
+        sentAt: LocalDateTime
+    }
+
+    class MessageDelivered <<Domain Event>> {
+        messageId: Long
+        conversationId: ConversationId
+        deliveredAt: LocalDateTime
+    }
+
+    class MessageRead <<Domain Event>> {
+        messageId: Long
+        conversationId: ConversationId
+        readBy: UserId
+        readAt: LocalDateTime
+    }
+
+    class MessageEdited <<Domain Event>> {
+        messageId: Long
+        conversationId: ConversationId
+        editedBy: UserId
+        editedAt: LocalDateTime
+    }
+
+    interface MessageRepository <<Repository>> {
+    }
+
+}
+
+' Relationships
+Message *-- UserId : senderId
+Message *-- UserId : receiverId
+Message *-- MessageContent
+Message *-- ConversationId
+Message *-- MessageStatus
+Message o-- LastEditedTime : optional
+
+ConversationId *-- UserId : participant1
+ConversationId *-- UserId : participant2
+
+' Business Rules
+note top of Message
+**Business Rules:**
+• Sender must be different from receiver
+• Message content cannot be empty
+• SentAt must not be in the future
+• Only sender can edit their message
+• Status follows: SENT → DELIVERED → READ
+end note
+
+note right of UserId
+**Invariants:**
+• Must be positive
+• Cannot be null
+end note
+
+note right of MessageContent
+**Invariants:**
+• Cannot be empty or whitespace
+• Maximum 5000 characters
+end note
+
+note right of ConversationId
+**Rules:**
+• Composite of two sorted UserIds
+• Format: "smallerId-largerId"
+• Ensures consistent identification
+end note
+
+note right of MessageStatus
+**Progression:**
+SENT → DELIVERED → READ
+(Transitions are unidirectional)
+end note
+
+@enduml
