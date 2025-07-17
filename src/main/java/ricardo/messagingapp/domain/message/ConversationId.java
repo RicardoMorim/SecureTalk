@@ -1,6 +1,13 @@
 package ricardo.messagingapp.domain.message;
 
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@EqualsAndHashCode
 public class ConversationId {
 
     public final String id;
@@ -19,7 +26,14 @@ public class ConversationId {
             throw new IllegalArgumentException("Sender and receiver IDs must be positive numbers.");
         }
 
-        String conversationId = senderId.getId() < receiverId.getId() ? senderId.getId() + "-" + receiverId.getId() : receiverId.getId() + "-" + senderId.getId();
+        if (senderId.equals(receiverId)) {
+            throw new IllegalArgumentException("Sender and receiver must be different users.");
+        }
+
+        String conversationId = senderId.getId() < receiverId.getId()
+                ? senderId.getId() + "-" + receiverId.getId()
+                : receiverId.getId() + "-" + senderId.getId();
+
         return new ConversationId(conversationId);
     }
 }

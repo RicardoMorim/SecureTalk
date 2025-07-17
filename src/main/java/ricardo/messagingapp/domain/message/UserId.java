@@ -1,10 +1,12 @@
 package ricardo.messagingapp.domain.message;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class UserId {
     private final Long id;
 

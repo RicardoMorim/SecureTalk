@@ -1,5 +1,13 @@
 package ricardo.messagingapp.domain.message;
 
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+@EqualsAndHashCode
+@Getter
+@Setter
 public class MessageContent {
     private String content;
 
@@ -12,10 +20,6 @@ public class MessageContent {
 
     public static MessageContent valueOf(String content) {
         return new MessageContent(content);
-    }
-
-    public String getContent() {
-        return content;
     }
 
     @Override
