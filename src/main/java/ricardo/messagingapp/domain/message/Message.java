@@ -1,5 +1,6 @@
 package ricardo.messagingapp.domain.message;
 
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import ricardo.messagingapp.domain.message.DomainEvents.MessageDelivered;
@@ -12,15 +13,49 @@ import java.time.LocalDateTime;
 @Getter
 public class Message extends AbstractAggregateRoot<Message> {
 
-    private final Long messageId;
-    private final ConversationId conversationId;
-    private final UserId senderId;
-    private final UserId receiverId;
+    private Long messageId;
+    private ConversationId conversationId;
+    private UserId senderId;
+    private UserId receiverId;
     private MessageContent content;
-    private final LocalDateTime sentAt;
+    private LocalDateTime sentAt;
     private MessageStatus status;
     private boolean isEdited;
     private LocalDateTime lastEditedTime;
+
+    protected Message() {
+    }
+
+
+
+    /**
+     * Constructor for creating a new message.
+     * This constructor is only to be used when loading from the database.
+     * * It should not be used for creating new messages, as it does not register any events.
+     *
+     * @param messageId
+     * @param conversationId
+     * @param senderId
+     * @param receiverId
+     * @param content
+     * @param sentAt
+     * @param status
+     * @param isEdited
+     * @param lastEditedTime
+     */
+    public Message(Long messageId, ConversationId conversationId, UserId senderId, UserId receiverId, MessageContent content, LocalDateTime sentAt, MessageStatus status, boolean isEdited, LocalDateTime lastEditedTime) {
+        this.messageId = messageId;
+        this.conversationId = conversationId;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.content = content;
+        this.sentAt = sentAt;
+        this.status = status;
+        this.isEdited = isEdited;
+        this.lastEditedTime = lastEditedTime;
+
+        // DO NOT register events in this constructor, as it is used for loading from the database
+    }
 
     private Message(UserId senderId, UserId receiverId, MessageContent content) {
         this.messageId = null; // Will be set by repository

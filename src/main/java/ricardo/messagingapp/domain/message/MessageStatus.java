@@ -1,6 +1,6 @@
 package ricardo.messagingapp.domain.message;
 
-enum MessageStatus {
+public enum MessageStatus {
     SENT,
     DELIVERED,
     READ;
@@ -27,4 +27,5 @@ enum MessageStatus {
     public String toString() {
         return name().toLowerCase();
     }
+
 }

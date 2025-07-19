@@ -3,10 +3,8 @@ package ricardo.messagingapp.domain.message;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @EqualsAndHashCode
 public class ConversationId {
 
@@ -17,6 +15,13 @@ public class ConversationId {
             throw new IllegalArgumentException("Conversation ID cannot be null or empty.");
         }
         this.id = id;
+    }
+
+    public static ConversationId fromConversationId(String id){
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("Conversation ID cannot be null or empty.");
+        }
+        return new ConversationId(id);
     }
 
 

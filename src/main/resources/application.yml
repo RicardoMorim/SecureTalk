@@ -1,4 +1,20 @@
+# set the database connection properties
+spring:
+  datasource:
+    username: ${RICARDO_DB_USERNAME}
+    password: ${RICARDO_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    url: postgresql://${RICARDO_DB_USERNAME}:${RICARRDO_DB_PASSWORD}@${RICARDO_DB_HOST}${RICARDO_DB_PORT}/${RICARDO_DB_NAME}
+
 ricardo:
   auth:
     jwt:
       secret: ${RICARDO_AUTH_JWT_SECRET}
+
+    refresh-tokens:
+      repository:
+        type: postgresql
+        database:
+          url: jdbc:postgresql://${RICARDO_DB_HOST}:${RICARDO_DB_PORT}/${RICARDO_DB_NAME}
+          driver-class-name: org.postgresql.Driver
+

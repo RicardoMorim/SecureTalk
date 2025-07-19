@@ -3,11 +3,9 @@ package ricardo.messagingapp.domain.message;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 @EqualsAndHashCode
 @Getter
-@Setter
 public class MessageContent {
     private String content;
 
