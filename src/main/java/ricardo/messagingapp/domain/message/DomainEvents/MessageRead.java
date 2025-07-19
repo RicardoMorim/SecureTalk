@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public record MessageRead(
         Long messageId,
         ConversationId conversationId,
-        UserId readBy,
         LocalDateTime readAt
 ) {
 }

@@ -84,10 +84,10 @@ public class Message extends AbstractAggregateRoot<Message> {
         }
     }
 
-    public void markAsRead(UserId readBy) {
-        if (this.status == MessageStatus.DELIVERED && readBy.equals(this.receiverId)) {
+    public void markAsRead() {
+        if (this.status == MessageStatus.DELIVERED) {
             this.status = this.status.next();
-            registerEvent(new MessageRead(this.messageId, this.conversationId, readBy, LocalDateTime.now()));
+            registerEvent(new MessageRead(this.messageId, this.conversationId, LocalDateTime.now()));
         }
     }
 

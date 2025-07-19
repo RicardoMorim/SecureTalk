@@ -32,11 +32,11 @@ public class MessageRepository {
         jdbcTemplate.execute(createTableSql);
     }
 
-    public void save(Message message) {
+    public int save(Message message) {
         String sql = "INSERT INTO messages (conversation_id, sender_id, receiver_id, content, sent_at, status, is_edited, last_edited_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        jdbcTemplate.update(sql,
+        return jdbcTemplate.update(sql,
                 message.getConversationId().getId(),
                 message.getSenderId().getId(),
                 message.getReceiverId().getId(),
@@ -47,13 +47,13 @@ public class MessageRepository {
                 message.getLastEditedTime());
     }
 
-    public void update(Message message) {
+    public int update(Message message) {
         Long id = message.getMessageId();
 
         String sql = "UPDATE messages SET content = ?, sent_at = ?, status = ?, is_edited = ?, last_edited_time = ? " +
                 "WHERE message_id = ?";
 
-        jdbcTemplate.update(sql,
+        return jdbcTemplate.update(sql,
                 message.getContent().getContent(),
                 message.getSentAt(),
                 message.getStatus(),
@@ -63,12 +63,13 @@ public class MessageRepository {
     }
 
 
-    public void delete(Message message) {
-        Long id = message.getMessageId();
+
+
+    public int delete(Long messageId) {
 
         String sql = "DELETE FROM messages WHERE message_id = ?";
 
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, messageId);
     }
 
 
