@@ -7,7 +7,7 @@ import lombok.Getter;
 @EqualsAndHashCode
 @Getter
 public class MessageContent {
-    private String content;
+    private final String content;
 
     private MessageContent(String content) {
         if (content == null || content.isBlank()) {

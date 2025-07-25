@@ -57,6 +57,8 @@ public class Message extends AbstractAggregateRoot<Message> {
         // DO NOT register events in this constructor, as it is used for loading from the database
     }
 
+
+
     private Message(UserId senderId, UserId receiverId, MessageContent content) {
         this.messageId = null; // Will be set by repository
         this.conversationId = ConversationId.valueOf(senderId, receiverId);
@@ -111,5 +113,12 @@ public class Message extends AbstractAggregateRoot<Message> {
         if (senderId.equals(receiverId)) {
             throw new IllegalArgumentException("Sender must be different from receiver");
         }
+    }
+
+    public void setContent(MessageContent content) {
+        if (content == null || content.getContent() == null || content.getContent().isBlank()) {
+            throw new IllegalArgumentException("Message content cannot be null or empty.");
+        }
+        this.content = content;
     }
 }

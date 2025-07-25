@@ -46,9 +46,8 @@ public class MessageEventHandler {
     @EventListener
     @Async
     public void handleMessageRead(MessageRead event) {
-        log.info("Message {} read by {} in conversation {} at {}",
+        log.info("Message {} in conversation {} at {}",
                 event.messageId(),
-                event.readBy().getId(),
                 event.conversationId().getId(),
                 event.readAt());
 

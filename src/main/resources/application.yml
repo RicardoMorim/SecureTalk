@@ -6,6 +6,9 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: postgresql://${RICARDO_DB_USERNAME}:${RICARRDO_DB_PASSWORD}@${RICARDO_DB_HOST}${RICARDO_DB_PORT}/${RICARDO_DB_NAME}
 
+securetalk:
+  encryption:
+    secret: ${SECURETALK_ENCRYPTION_SECRET}
 ricardo:
   auth:
     jwt:

@@ -62,9 +62,6 @@ public class MessageRepository {
                 id);
     }
 
-
-
-
     public int delete(Long messageId) {
 
         String sql = "DELETE FROM messages WHERE message_id = ?";
@@ -137,6 +134,37 @@ public class MessageRepository {
                      "FROM messages WHERE sender_id = ? OR receiver_id = ?";
         return jdbcTemplate.query(sql, new Object[]{userId.getId(), userId.getId(), userId.getId()}, (rs, rowNum) -> {
             return UserId.valueOf(rs.getLong("user_id"));
+        });
+    }
+
+
+    public Iterable<ConversationId> findLatestConversations(UserId userId, int limit) {
+        String sql = "SELECT DISTINCT conversation_id FROM messages " +
+                     "WHERE sender_id = ? OR receiver_id = ? " +
+                     "ORDER BY sent_at DESC LIMIT ?";
+
+        return jdbcTemplate.query(sql, new Object[]{userId.getId(), userId.getId(), limit}, (rs, rowNum) -> {
+            return ConversationId.fromConversationId(rs.getString("conversation_id"));
+        });
+    }
+
+    public Iterable<Message> findLatestMessagesFromConversation(ConversationId conversationId, int limit) {
+        String sql = "SELECT * FROM messages " +
+                     "WHERE conversation_id = ? " +
+                     "ORDER BY sent_at DESC LIMIT ?";
+
+        return jdbcTemplate.query(sql, new Object[]{conversationId.getId(), limit}, (rs, rowNum) -> {
+            return new Message(
+                    rs.getLong("message_id"),
+                    ConversationId.fromConversationId(rs.getString("conversation_id")),
+                    UserId.valueOf(rs.getLong("sender_id")),
+                    UserId.valueOf(rs.getLong("receiver_id")),
+                    MessageContent.valueOf(rs.getString("content")),
+                    rs.getTimestamp("sent_at").toLocalDateTime(),
+                    MessageStatus.valueOf(rs.getString("status")),
+                    rs.getBoolean("is_edited"),
+                    rs.getTimestamp("last_edited_time") != null ? rs.getTimestamp("last_edited_time").toLocalDateTime() : null
+            );
         });
     }
 
