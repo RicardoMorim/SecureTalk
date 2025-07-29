@@ -9,6 +9,7 @@ public record MessageSent(
         ConversationId conversationId,
         UserId senderId,
         UserId receiverId,
-        LocalDateTime sentAt
+        LocalDateTime sentAt,
+        String encryptedContent
 ) {
 }

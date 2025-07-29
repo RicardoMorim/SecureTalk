@@ -1,12 +1,7 @@
 package ricardo.messagingapp.domain.message;
 
-import jakarta.persistence.Entity;
 import lombok.Getter;
 import org.springframework.data.domain.AbstractAggregateRoot;
-import ricardo.messagingapp.domain.message.DomainEvents.MessageDelivered;
-import ricardo.messagingapp.domain.message.DomainEvents.MessageEdited;
-import ricardo.messagingapp.domain.message.DomainEvents.MessageRead;
-import ricardo.messagingapp.domain.message.DomainEvents.MessageSent;
 
 import java.time.LocalDateTime;
 
@@ -27,11 +22,10 @@ public class Message extends AbstractAggregateRoot<Message> {
     }
 
 
-
     /**
      * Constructor for creating a new message.
      * This constructor is only to be used when loading from the database.
-     * * It should not be used for creating new messages, as it does not register any events.
+     * it should not be used for creating new messages, as it uses a messageId and not an auto-generated one.
      *
      * @param messageId
      * @param conversationId
@@ -54,9 +48,7 @@ public class Message extends AbstractAggregateRoot<Message> {
         this.isEdited = isEdited;
         this.lastEditedTime = lastEditedTime;
 
-        // DO NOT register events in this constructor, as it is used for loading from the database
     }
-
 
 
     private Message(UserId senderId, UserId receiverId, MessageContent content) {
@@ -70,8 +62,6 @@ public class Message extends AbstractAggregateRoot<Message> {
         this.isEdited = false;
         this.lastEditedTime = null;
 
-        // Publish domain event
-        registerEvent(new MessageSent(this.conversationId, this.senderId, this.receiverId, this.sentAt));
     }
 
     public static Message create(UserId senderId, UserId receiverId, MessageContent content) {
@@ -82,14 +72,12 @@ public class Message extends AbstractAggregateRoot<Message> {
     public void markAsDelivered() {
         if (this.status == MessageStatus.SENT) {
             this.status = this.status.next();
-            registerEvent(new MessageDelivered(this.messageId, this.conversationId, LocalDateTime.now()));
         }
     }
 
     public void markAsRead() {
         if (this.status == MessageStatus.DELIVERED) {
             this.status = this.status.next();
-            registerEvent(new MessageRead(this.messageId, this.conversationId, LocalDateTime.now()));
         }
     }
 
@@ -102,7 +90,6 @@ public class Message extends AbstractAggregateRoot<Message> {
         this.isEdited = true;
         this.lastEditedTime = LocalDateTime.now();
 
-        registerEvent(new MessageEdited(this.messageId, this.conversationId, editedBy, this.lastEditedTime));
     }
 
     private static void validateMessageCreation(UserId senderId, UserId receiverId, MessageContent content) {

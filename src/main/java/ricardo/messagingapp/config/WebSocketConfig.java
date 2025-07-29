@@ -10,10 +10,10 @@ import ricardo.messagingapp.websocket.WebSocketHandler;
 
 @Configuration
 @EnableWebSocketMessageBroker
-
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final WebSocketHandler webSocketHandler;
     private final JwtService jwtService;
+
 
     public WebSocketConfig(WebSocketHandler webSocketHandler, JwtService jwtService) {
         this.webSocketHandler = webSocketHandler;
@@ -30,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/topic", "/queue");
         config.setApplicationDestinationPrefixes("/app");
     }
 }

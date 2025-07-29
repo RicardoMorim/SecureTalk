@@ -200,5 +200,26 @@ public class MessageService {
         // Save the updated message
         return messageRepository.update(message) > 0;
     }
+
+    public boolean canUserEditMessage(Long messageId, UserId userId) {
+        // Validate messageId
+        if (messageId == null || messageId <= 0) {
+            throw new IllegalArgumentException("Message ID must be a positive number.");
+        }
+
+        // Validate userId
+        if (userId == null || userId.getId() == null || userId.getId() <= 0) {
+            throw new IllegalArgumentException("User ID must be a positive number.");
+        }
+
+        // Retrieve the message
+        Message message = messageRepository.findById(messageId);
+        if (message == null) {
+            throw new IllegalArgumentException("Message not found.");
+        }
+
+        // Check if the user is the sender of the message
+        return message.getSenderId().equals(userId);
+    }
 }
 

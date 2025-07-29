@@ -1,4 +1,4 @@
-package ricardo.messagingapp.domain.message.DomainEvents;
+package ricardo.messagingapp.domain.message.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -6,18 +6,17 @@ import jakarta.validation.constraints.Positive;
 import ricardo.messagingapp.domain.message.ConversationId;
 import ricardo.messagingapp.domain.message.UserId;
 
-import java.time.LocalDateTime;
-
-public record MessageEdited(
+public record EditNotification(
         @NotNull @Positive
         Long messageId,
-        @NotNull
-        ConversationId conversationId,
+        @NotNull @NotBlank
+        String newDecryptedContent,
         @NotNull
         UserId editedBy,
         @NotNull
-        LocalDateTime editedAt,
+        ConversationId conversationId,
         @NotNull @NotBlank
-        String newEncryptedContent
+        String editedAt
 ) {
+
 }

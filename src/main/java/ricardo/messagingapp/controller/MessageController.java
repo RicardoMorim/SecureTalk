@@ -31,6 +31,9 @@ public class MessageController {
         UserId userId = UserId.valueOf(userService.getUserByEmail(principal.getName()).getId());
 
         boolean success = messageService.sendMessage(payload, userId);
+
+
+
         if (success) {
             return "Message sent successfully";
         } else {
