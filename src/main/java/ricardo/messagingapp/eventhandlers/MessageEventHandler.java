@@ -7,7 +7,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import ricardo.messagingapp.domain.message.ConversationId;
-import ricardo.messagingapp.domain.message.DTO.EditNotification;
+import ricardo.messagingapp.domain.message.DTO.EditMessage;
 import ricardo.messagingapp.domain.message.DTO.MessageNotification;
 import ricardo.messagingapp.domain.message.DTO.ReadNotification;
 import ricardo.messagingapp.domain.message.DomainEvents.MessageDelivered;
@@ -116,9 +116,9 @@ public class MessageEventHandler {
             // - Log edit history
             UserId userId = ConversationId.extractTheOtherUserId(event.conversationId().getId(), UserId.valueOf(event.editedBy().getId()));
 
-            notificationService.broadcastMessageEdit(new EditNotification(event.messageId(), event.newEncryptedContent(), event.editedBy(), event.conversationId(), event.editedAt().toString()));
+            notificationService.broadcastMessageEdit(new EditMessage(event.messageId(), event.newEncryptedContent(), event.editedBy(), event.conversationId(), event.editedAt().toString()));
             metricsService.trackEditFrequency(event);
-            simpMessagingTemplate.convertAndSendToUser(String.valueOf(userId.getId()), "/queue/messages", new EditNotification(event.messageId(), encryptionService.decrypt(event.newEncryptedContent()), event.editedBy(), event.conversationId(), event.editedAt().toString()));
+            simpMessagingTemplate.convertAndSendToUser(String.valueOf(userId.getId()), "/queue/messages", new EditMessage(event.messageId(), encryptionService.decrypt(event.newEncryptedContent()), event.editedBy(), event.conversationId(), event.editedAt().toString()));
         } catch (Exception e) {
             log.error("Error handling message edit event: {}", e.getMessage(), e);
         }

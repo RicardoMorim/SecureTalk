@@ -182,7 +182,7 @@ public class MessageService {
     }
 
 
-    public boolean markMessageAsRead(Long messageId) {
+    public boolean markMessageAsRead(Long messageId, UserId userId) {
         // Validate messageId
         if (messageId == null || messageId <= 0) {
             throw new IllegalArgumentException("Message ID must be a positive number.");
@@ -194,11 +194,39 @@ public class MessageService {
             throw new IllegalArgumentException("Message not found.");
         }
 
+        // Validate userId
+        ConversationId conversationId = message.getConversationId();
+
+        if (conversationId == null || conversationId.getId() == null || conversationId.getId().isEmpty()) {
+            throw new IllegalArgumentException("Conversation ID cannot be null or empty.");
+        }
+
+        if (!ConversationId.validateConversationId(conversationId.getId(), userId)) {
+            throw new IllegalArgumentException("Invalid conversation ID for the given user ID.");
+        }
+
         // Update the status to read
         message.markAsRead();
 
         // Save the updated message
         return messageRepository.update(message) > 0;
+    }
+
+
+    public ConversationId getMessageConversationId(Long messageId){
+        // Validate messageId
+        if (messageId == null || messageId <= 0) {
+            throw new IllegalArgumentException("Message ID must be a positive number.");
+        }
+
+        // Retrieve the message
+        Message message = messageRepository.findById(messageId);
+        if (message == null) {
+            throw new IllegalArgumentException("Message not found.");
+        }
+
+        // Return the conversation ID
+        return message.getConversationId();
     }
 
     public boolean canUserEditMessage(Long messageId, UserId userId) {

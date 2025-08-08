@@ -13,11 +13,22 @@ ricardo:
   auth:
     jwt:
       secret: ${RICARDO_AUTH_JWT_SECRET}
-
+      access-token-expiration: 900000
+      refresh-token-expiration: 2592000000
     refresh-tokens:
+      rotate-on-refresh: true
+      max-tokens-per-user: 5
       repository:
         type: postgresql
         database:
           url: jdbc:postgresql://${RICARDO_DB_HOST}:${RICARDO_DB_PORT}/${RICARDO_DB_NAME}
           driver-class-name: org.postgresql.Driver
-
+    password-policy:
+      require-special-chars: true
+      require-uppercase: true
+      require-lowercase: true
+      min-length: 8
+      max-length: 128
+      require-digits: true
+      prevent-common-passwords: true
+      common-passwords-file-path: /static/commonpasswords.txt

@@ -1,24 +1,17 @@
 package ricardo.messagingapp.config;
 
 import com.ricardo.auth.core.JwtService;
-import com.ricardo.auth.core.UserService;
-import com.ricardo.auth.domain.user.AuthUser;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
-import ricardo.messagingapp.domain.message.ConversationId;
-import ricardo.messagingapp.domain.message.Message;
-import ricardo.messagingapp.domain.message.MessageStatus;
-import ricardo.messagingapp.domain.message.UserId;
-import ricardo.messagingapp.services.MessageService;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 @Component
@@ -35,7 +28,12 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
             WebSocketHandler wsHandler, Map<String, Object> attributes
     ) throws Exception {
         if (request instanceof ServletServerHttpRequest servletRequest) {
-            String token = servletRequest.getServletRequest().getParameter("token");
+            Cookie[] cookies = servletRequest.getServletRequest().getCookies();
+            String token = Arrays.stream(cookies)
+                    .filter(c -> "access_token".equals(c.getName()))
+                    .findFirst()
+                    .map(Cookie::getValue)
+                    .orElse(null);
 
             if (token != null && jwtService.isTokenValid(token)) {
                 String email = jwtService.extractSubject(token);
