@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ricardo.messagingapp.domain.message.*;
 
+import java.util.UUID;
+
 @Repository
 public class MessageRepository {
     private JdbcTemplate jdbcTemplate;
@@ -70,7 +72,7 @@ public class MessageRepository {
     }
 
 
-    public Message findById(Long messageId) {
+    public Message findById(UUID messageId) {
         String sql = "SELECT * FROM messages WHERE message_id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{messageId}, (rs, rowNum) -> {
             // Map the result set to a Message object

@@ -105,12 +105,6 @@ public class MessageEventHandler {
                 return;
             }
 
-            if (!messageService.canUserEditMessage(event.messageId(), event.editedBy())) {
-                log.warn("Unauthorized edit attempt");
-                return;
-            }
-
-
             // TODO:
             // - Notify participants of edit
             // - Log edit history
