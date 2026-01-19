@@ -3,10 +3,12 @@ package ricardo.messagingapp.config;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
+@DependsOn({"userSchemaInitializer", "RefreshTokenSchemaInitializer"})
 public class MessageSchemaInitializer {
     private static final Logger logger = LoggerFactory.getLogger(MessageSchemaInitializer.class);
     private final JdbcTemplate jdbcTemplate;

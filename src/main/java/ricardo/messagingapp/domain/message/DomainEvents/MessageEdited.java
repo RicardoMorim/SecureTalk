@@ -1,23 +1,29 @@
 package ricardo.messagingapp.domain.message.DomainEvents;
 
+import com.ricardo.auth.domain.user.Username;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import ricardo.messagingapp.domain.message.ConversationId;
-import ricardo.messagingapp.domain.message.UserId;
+import ricardo.messagingapp.domain.message.MessageContent;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.UUID;
 
 public record MessageEdited(
         @NotNull @Positive
-        Long messageId,
+        UUID messageId,
         @NotNull
-        ConversationId conversationId,
+        Username receiverUsername,
         @NotNull
-        UserId editedBy,
+        Username userWhoEditedUsername,
         @NotNull
-        LocalDateTime editedAt,
+        Instant editedAt,
         @NotNull @NotBlank
-        String newEncryptedContent
+        MessageContent newEncryptedContent
 ) {
+
+    @Override
+    public String toString() {
+        return "\nMessage Edited: " + messageId.toString() + "\nReceiver: " + receiverUsername.toString()+ "\nSent By: " + userWhoEditedUsername.toString() + "\nEdited at: " + editedAt;
+    }
 }

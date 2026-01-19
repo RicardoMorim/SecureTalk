@@ -13,7 +13,7 @@ public class EncryptionService {
     private static final String ALGORITHM = "AES";
     private final SecretKeySpec secretKey;
 
-    public EncryptionService(@Value("${securetalk.encryption.secret}") String secret) {
+    public EncryptionService(@Value("${secure-talk.encryption.secret}") String secret) {
         byte[] keyBytes = secret.substring(0, 32).getBytes();
         this.secretKey = new SecretKeySpec(keyBytes, ALGORITHM);
     }

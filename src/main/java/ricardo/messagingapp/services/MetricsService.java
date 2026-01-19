@@ -1,10 +1,14 @@
 package ricardo.messagingapp.services;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ricardo.messagingapp.domain.message.DomainEvents.MessageDelivered;
 import ricardo.messagingapp.domain.message.DomainEvents.MessageEdited;
 import ricardo.messagingapp.domain.message.DomainEvents.MessageRead;
 import ricardo.messagingapp.domain.message.DomainEvents.MessageSent;
 
+@Service
+@RequiredArgsConstructor
 public class MetricsService {
 
 

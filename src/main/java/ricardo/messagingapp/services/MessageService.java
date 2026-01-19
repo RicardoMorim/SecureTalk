@@ -38,7 +38,7 @@ public class MessageService {
 
     public boolean sendMessage(MessagePayload payload, UUID currentUserId) {
         // Validate payload
-        if (payload == null || payload.getContent() == null || payload.getContent().isEmpty() || payload.getOtherUser() == null) {
+        if (payload == null || payload.getContent() == null || payload.getContent().getContent().isEmpty() || payload.getOtherUser() == null) {
             throw new IllegalArgumentException("Message content cannot be null or empty.");
         }
 
@@ -52,12 +52,12 @@ public class MessageService {
             conversationRepository.save(conversation);
         }
 
-        validateMessageCreation(currentUserId, MessageContent.valueOf(payload.getContent()), conversation);
+        validateMessageCreation(currentUserId, MessageContent.valueOf(payload.getContent().getContent()), conversation);
 
         // Create a new message
         Message message = Message.create(
                 currentUserId,
-                MessageContent.valueOf(payload.getContent()),
+                MessageContent.valueOf(payload.getContent().getContent()),
                 conversation.getId()
         );
 
@@ -111,7 +111,7 @@ public class MessageService {
                 throw new IllegalArgumentException("User not found.");
             }
             eventPublisher.publishEvent(
-                    new MessageEdited(message.getId(), otherUser.getUsername(), userWhoEdited.getUsername(), Instant.now(), encryptedContent)
+                    new MessageEdited(message.getId(), Username.valueOf(otherUser.getUsername()), Username.valueOf(userWhoEdited.getUsername()), Instant.now(), MessageContent.valueOf(encryptedContent))
             );
         }
         return messageRepository.update(message) > 0;
@@ -127,7 +127,7 @@ public class MessageService {
 
         if (messageRepository.delete(messageId) > 0){
             eventPublisher.publishEvent(
-                    new MessageDeleted(messageId, otherUser.getUsername(), userWhoDeleted.getUsername(), Instant.now())
+                    new MessageDeleted(messageId, Username.valueOf(otherUser.getUsername()), Username.valueOf(userWhoDeleted.getUsername()), Instant.now())
             );
             return true;
         }
@@ -181,19 +181,25 @@ public class MessageService {
         return otherUser;
     }
 
-    public boolean markConversationAsRead(Username otherUser, UUID userId) {
+    /**
+     * @param userWhoSent - User that the logged user is conversating with (the one that sent the message he is seeing)
+     * @param loggedUser - The logged user (seen the message)
+     *
+     * @return true if the conversation was marked as read, false otherwise
+     */
+    public boolean markConversationAsRead(Username userWhoSent, UUID loggedUser) {
         // Validate conversationId
-        if (otherUser == null || otherUser.getUsername() == null || otherUser.getUsername().isEmpty()) {
+        if (userWhoSent == null || userWhoSent.getUsername() == null || userWhoSent.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Conversation ID cannot be null or empty.");
         }
 
         // Validate userId
-        if (userId == null) {
+        if (loggedUser == null) {
             throw new IllegalArgumentException("User ID must be a positive number.");
         }
 
         // Retrieve the conversation
-        Conversation conversation = conversationRepository.findDMByNameAndUUID(otherUser.getUsername(), userId);
+        Conversation conversation = conversationRepository.findDMByNameAndUUID(userWhoSent.getUsername(), loggedUser);
         if (conversation == null) {
             throw new IllegalArgumentException("Conversation not found.");
         }
@@ -201,7 +207,7 @@ public class MessageService {
         // Mark all messages in the conversation as read
         List<Message> messages = messageRepository.findAllFromConversation(conversation.getId());
 
-        User userWhoRead = userService.getUserById(userId);
+        User userWhoRead = userService.getUserById(loggedUser);
 
         if (messages.isEmpty()) {
             // No messages to mark as read
@@ -213,13 +219,13 @@ public class MessageService {
         }
 
         for (Message message : messages) {
-            if (message.getSenderId().equals(userId) || message.isSeen()) {
+            if (message.getSenderId().equals(loggedUser) || message.isSeen()) {
                 // If the message is sent by the user or already read, we can stop
                 break;
             }
-            markMessageAsRead(message.getId(), userId);
+            markMessageAsRead(message.getId(), loggedUser);
             eventPublisher.publishEvent(
-                    new MessageRead(message, otherUser, userWhoRead.getUsername(), Instant.now())
+                    new MessageRead(message.getId(), Username.valueOf(userWhoRead.getUsername()), userWhoSent, Instant.now())
             );
         }
 
@@ -263,7 +269,7 @@ public class MessageService {
         }
 
         // Retrieve messages for the conversation from repository
-        Iterable<Message> messages = messageRepository.findAllFromConversation(conversation.getId());
+        List<Message> messages = messageRepository.findAllFromConversation(conversation.getId());
 
         return decryptMessages(messages);
     }
@@ -361,50 +367,5 @@ public class MessageService {
 
         // Save the updated message
         return messageRepository.update(message) > 0;
-    }
-
-    public boolean markConversationAsRead(Username otherUser, UUID userId) {
-        // Validate conversationId
-        if (otherUser == null || otherUser.getUsername() == null || otherUser.getUsername().isEmpty()) {
-            throw new IllegalArgumentException("Conversation ID cannot be null or empty.");
-        }
-
-        // Validate userId
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID must be a positive number.");
-        }
-
-        // Retrieve the conversation
-        Conversation conversation = conversationRepository.findDMByNameAndUUID(otherUser.getUsername(), userId);
-        if (conversation == null) {
-            throw new IllegalArgumentException("Conversation not found.");
-        }
-
-        // Mark all messages in the conversation as read
-        List<Message> messages = messageRepository.findAllFromConversation(conversation.getId());
-
-        User userWhoRead = userService.getUserById(userId);
-
-        if (messages.isEmpty()) {
-            // No messages to mark as read
-            return false;
-        }
-
-        if (userWhoRead == null) {
-            throw new IllegalArgumentException("User not found.");
-        }
-
-        for (Message message : messages) {
-            if (message.getSenderId().equals(userId) || message.isSeen()) {
-                // If the message is sent by the user or already read, we can stop
-                break;
-            }
-            markMessageAsRead(message.getId(), userId);
-            eventPublisher.publishEvent(
-                    new MessageRead(message, otherUser, userWhoRead.getUsername(), Instant.now())
-            );
-        }
-
-        return true;
     }
 }

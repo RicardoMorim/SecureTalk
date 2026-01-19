@@ -1,20 +1,25 @@
 package ricardo.messagingapp.domain.message.DomainEvents;
 
+import com.ricardo.auth.domain.user.Username;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import ricardo.messagingapp.domain.message.ConversationId;
-import ricardo.messagingapp.domain.message.UserId;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record MessageRead(
         @NotNull @Positive
-        Long messageId,
+        UUID messageId,
         @NotNull
-        ConversationId conversationId,
+        Username userWhoReadUsername,
         @NotNull
-        UserId userWhoReadId,
+        Username userWhoSentUsername,
         @NotNull
-        LocalDateTime readAt
+        Instant readAt
 ) {
+    @Override
+    public String toString() {
+        return "\nMessage Read: " + messageId.toString() + "\nReceiver: " + userWhoReadUsername.toString()+ "\nSent By: " + userWhoSentUsername.toString() + "\nRead at: " + readAt;
+    }
 }

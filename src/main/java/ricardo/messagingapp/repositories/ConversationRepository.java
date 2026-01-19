@@ -1,5 +1,6 @@
 package ricardo.messagingapp.repositories;
 
+import org.springframework.stereotype.Repository;
 import ricardo.messagingapp.domain.conversation.Conversation;
 
 import java.util.ArrayList;
@@ -7,7 +8,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+@Repository
 public class ConversationRepository {
+
+    public Conversation findByMessageId(UUID messageId){
+        return null;
+    }
 
     public Conversation findById(UUID conversationId) {
         // Implementation to find a conversation by its ID

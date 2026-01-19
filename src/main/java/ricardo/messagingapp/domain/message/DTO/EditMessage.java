@@ -1,18 +1,22 @@
 package ricardo.messagingapp.domain.message.DTO;
 
+import com.ricardo.auth.domain.user.Username;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import ricardo.messagingapp.domain.message.UserId;
+import ricardo.messagingapp.domain.message.MessageContent;
+
+import java.time.Instant;
+import java.util.UUID;
 
 public record EditMessage(
         @NotNull @Positive
-        Long messageId,
+        UUID messageId,
         @NotNull @NotBlank
-        String newDecryptedContent,
-        @NotNull
-        UserId receiverId,
+        MessageContent newDecryptedContent,
         @NotNull @NotBlank
-        String editedAt
+        Username receiverUsername,
+        @NotNull @NotBlank
+        Instant editedAt
 ) {
 }

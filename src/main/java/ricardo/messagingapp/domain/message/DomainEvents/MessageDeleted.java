@@ -1,14 +1,18 @@
 package ricardo.messagingapp.domain.message.DomainEvents;
 
-import ricardo.messagingapp.domain.message.ConversationId;
-import ricardo.messagingapp.domain.message.UserId;
+import com.ricardo.auth.domain.user.Username;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.UUID;
 
 public record MessageDeleted (
-        Long messageId,
-        ConversationId conversationId,
-        UserId userWhoDeletedId,
-        LocalDateTime deletedAt
+        UUID messageId,
+        Username receiverUsername,
+        Username userWhoDeletedUsername,
+        Instant deletedAt
 ){
+    @Override
+    public String toString() {
+        return "\nMessage Deleted: " + messageId.toString() + "\nReceiver: " + receiverUsername.toString()+ "\nDeletedBy: " + userWhoDeletedUsername + "\nDeleted at: " + deletedAt;
+    }
 }

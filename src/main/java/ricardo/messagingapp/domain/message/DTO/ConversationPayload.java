@@ -1,15 +1,17 @@
 package ricardo.messagingapp.domain.message.DTO;
 
+import com.ricardo.auth.domain.user.Username;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import ricardo.messagingapp.domain.message.MessageContent;
 
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
 public class ConversationPayload {
-    private final String otherUserName;
-    private final List<String> messages;
+    private final Username otherUserName;
+    private final List<MessageContent> messages;
     private final int unreadCount;
     private final int page;
     private final int pageSize;

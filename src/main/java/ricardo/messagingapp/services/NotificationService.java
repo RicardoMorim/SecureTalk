@@ -24,7 +24,7 @@ public class NotificationService {
     public void notifyMessageDeletion(MessageDeleted event) {
     }
 
-    public void broadcastMessageEdit(EditMessage event) {
+    public void broadcastMessageEdit(MessageEdited event) {
     }
 
     public void sendPushNotification(String receiverId, String senderId) {

@@ -1,6 +1,7 @@
 package ricardo.messagingapp.domain.message;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ricardo.messagingapp.domain.conversation.Conversation;
 
@@ -8,6 +9,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Getter
+@AllArgsConstructor
 public class Message {
 
     private UUID id;
@@ -39,6 +41,7 @@ public class Message {
         this.seen = false;
         this.editedAt = null;
     }
+
 
 
     public static Message create(UUID senderId, MessageContent content, UUID conversationId) {
