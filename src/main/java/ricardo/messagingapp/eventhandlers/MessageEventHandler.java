@@ -101,7 +101,7 @@ public class MessageEventHandler {
             User sender = userService.getUserByUserName(event.userWhoEditedUsername().getUsername());
             String decrypted = decryptContent(event.newEncryptedContent());
 
-            notificationService.broadcastMessageEdit(event);
+            notificationService.notifyMessageEdit(event);
             metricsService.trackEditFrequency(event);
 
             messagingTemplate.convertAndSendToUser(

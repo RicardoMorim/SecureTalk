@@ -70,6 +70,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                     .map(Message::getContent)
                     .map(MessageContent::getContent).map(MessageContent::valueOf)
                     .toList();
+
             try {
 
             session.sendMessage(new TextMessage(new Gson().toJson(

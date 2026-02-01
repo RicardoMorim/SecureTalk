@@ -37,7 +37,6 @@ public class MessageService {
 
 
     public boolean sendMessage(MessagePayload payload, UUID currentUserId) {
-        // Validate payload
         if (payload == null || payload.getContent() == null || payload.getContent().getContent().isEmpty() || payload.getOtherUser() == null) {
             throw new IllegalArgumentException("Message content cannot be null or empty.");
         }
@@ -54,7 +53,6 @@ public class MessageService {
 
         validateMessageCreation(currentUserId, MessageContent.valueOf(payload.getContent().getContent()), conversation);
 
-        // Create a new message
         Message message = Message.create(
                 currentUserId,
                 MessageContent.valueOf(payload.getContent().getContent()),
@@ -79,7 +77,6 @@ public class MessageService {
     }
 
     public boolean sendMessage(Message message) {
-        // Validate message
         if (message == null || message.getContent() == null || message.getContent().getContent().isEmpty()) {
             throw new IllegalArgumentException("Message cannot be null or empty");
         }
@@ -88,7 +85,6 @@ public class MessageService {
 
         message.setContent(MessageContent.valueOf(encryptedContent));
 
-        // Save message to repository
         messageRepository.save(message);
 
         return true;
@@ -188,7 +184,6 @@ public class MessageService {
      * @return true if the conversation was marked as read, false otherwise
      */
     public boolean markConversationAsRead(Username userWhoSent, UUID loggedUser) {
-        // Validate conversationId
         if (userWhoSent == null || userWhoSent.getUsername() == null || userWhoSent.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Conversation ID cannot be null or empty.");
         }
@@ -223,10 +218,12 @@ public class MessageService {
                 // If the message is sent by the user or already read, we can stop
                 break;
             }
+
             markMessageAsRead(message.getId(), loggedUser);
             eventPublisher.publishEvent(
                     new MessageRead(message.getId(), Username.valueOf(userWhoRead.getUsername()), userWhoSent, Instant.now())
             );
+            break; // the logic always checks only for one message read, so we mark only the latest one seen, and we know all the previous sent ones, are also read.
         }
 
         return true;
@@ -350,7 +347,7 @@ public class MessageService {
     }
 
 
-    private boolean markMessageAsRead(UUID messageId, UUID userId) {
+    private void markMessageAsRead(UUID messageId, UUID userId) {
         // Validate messageId
         if (messageId == null) {
             throw new IllegalArgumentException("Message ID must be a UUID.");
@@ -364,8 +361,5 @@ public class MessageService {
 
         // Update the status to read
         message.markAsRead();
-
-        // Save the updated message
-        return messageRepository.update(message) > 0;
     }
 }

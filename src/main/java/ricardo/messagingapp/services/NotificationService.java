@@ -1,7 +1,6 @@
 package ricardo.messagingapp.services;
 
 import org.springframework.stereotype.Service;
-import ricardo.messagingapp.domain.message.DTO.EditMessage;
 import ricardo.messagingapp.domain.message.DomainEvents.*;
 
 
@@ -15,16 +14,11 @@ public class NotificationService {
 
     }
 
-    public void notifyMessageEdited(MessageEdited event) {
-    }
 
     public void notifyMessageRead(MessageRead event) {
     }
 
-    public void notifyMessageDeletion(MessageDeleted event) {
-    }
-
-    public void broadcastMessageEdit(MessageEdited event) {
+    public void notifyMessageEdit(MessageEdited event) {
     }
 
     public void sendPushNotification(String receiverId, String senderId) {

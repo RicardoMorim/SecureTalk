@@ -11,15 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketSessionRegistry {
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
-    public void addSession(String userId, WebSocketSession session) {
-        sessions.put(userId, session);
+    public void addSession(String userEmail, WebSocketSession session) {
+        sessions.put(userEmail, session);
     }
 
-    public WebSocketSession getSession(String userId) {
-        return sessions.get(userId);
+    public WebSocketSession getSession(String userEmail) {
+        return sessions.get(userEmail);
     }
 
-    public void removeSession(String userId) {
-        sessions.remove(userId);
+    public void removeSession(String userEmail) {
+        sessions.remove(userEmail);
     }
 }

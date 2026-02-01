@@ -38,7 +38,6 @@ public class MessageController {
     }
 
     @MessageMapping("/sendMessage")
-    @SendTo("/user/{userId}/queue/messages")
     public String sendMessage(
             MessagePayload payload,
             Principal principal) {
@@ -59,7 +58,6 @@ public class MessageController {
     }
 
     @MessageMapping("/editMessage")
-    @SendTo("/user/{userId}/queue/messages")
     public String editMessage(
             EditMessage payload,
             Principal principal) {
@@ -81,7 +79,6 @@ public class MessageController {
 
 
     @MessageMapping("/deleteMessage")
-    @SendTo("/user/{userId}/queue/messages")
     public String deleteMessage(
             UUID messageId,
             Principal principal) {
@@ -103,7 +100,6 @@ public class MessageController {
 
 
     @MessageMapping("/readNotification")
-    @SendTo("/user/{userId}/queue/messages")
     public String readNotification(
             Username conversation,
             Principal principal) {
