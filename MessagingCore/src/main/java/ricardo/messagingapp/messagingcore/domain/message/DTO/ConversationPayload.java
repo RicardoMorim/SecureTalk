@@ -3,7 +3,7 @@ package ricardo.messagingapp.messagingcore.domain.message.DTO;
 import com.ricardo.auth.domain.user.Username;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ricardo.messagingapp.domain.message.MessageContent;
+import ricardo.messagingapp.messagingcore.domain.message.MessageContent;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package ricardo.messagingapp.messagingcore.domain.message.DTO;
 
 import com.ricardo.auth.domain.user.Username;
-import ricardo.messagingapp.domain.message.MessageContent;
+import ricardo.messagingapp.messagingcore.domain.message.MessageContent;
 
 
 import java.time.Instant;

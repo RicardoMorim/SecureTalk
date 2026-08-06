@@ -2,13 +2,15 @@ services:
   postgres:
     image: 'postgres:17'
     environment:
-      - 'POSTGRES_DB=securetalk'
+      - 'POSTGRES_MULTIPLE_DATABASES=securetalkauth,securetalkmessaging'
       - 'POSTGRES_PASSWORD=8080'
       - 'POSTGRES_USER=postgres'
+    volumes:
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     ports:
       - '5433:5432'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d securetalk"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
