@@ -1,0 +1,77 @@
+# set the database connection properties
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+
+  data:
+    jpa:
+      repositories:
+        enabled: false
+
+  modulith:
+    enabled: false
+    events:
+      jdbc:
+        enabled: false
+      jpa:
+        enabled: false
+
+
+ricardo:
+  auth:
+    jwt:
+      access-token-expiration: 900000
+      refresh-token-expiration: 2592000000
+    refresh-tokens:
+      rotate-on-refresh: true
+      max-tokens-per-user: 5
+    repository:
+      type: postgresql
+      database:
+        url: jdbc:postgresql://localhost:5433/securetalkauth
+        username: postgres
+        password: 8080
+        driver-class-name: org.postgresql.Driver
+    password-policy:
+      require-special-chars: true
+      require-uppercase: true
+      require-lowercase: true
+      min-length: 8
+      max-length: 128
+      require-digits: true
+      prevent-common-passwords: true
+      common-passwords-file-path: /static/commonpasswords.txt
+
+    rate-limiter:
+      max-requests: 3
+      time-window-ms: 1000
+    password-reset:
+      require-https: false
+
+
+
+
+secure-talk:
+  rate-limiter:
+    max-requests: 10
+    time-window-ms: 10000
+  encryption:
+    secret: ElI8xKZIwHZo5J4HFDbnFdz08HBP/sO95H0DxFZQS0KTS4+0Z6ZDRDpW8K6yCYOb
+
+
+
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
+    org.springframework.jdbc: DEBUG
+    ricardo.messagingapp: DEBUG
+    com.ricardo.auth: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org:
+      springframework:
+        boot:
+          autoconfigure:
+            security: INFO
